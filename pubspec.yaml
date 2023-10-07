@@ -37,6 +37,13 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   flutter_bloc: ^8.1.3
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  go_router: ^10.0.0
+  google_fonts: ^4.0.4
+  localization: ^2.1.0
+  flutter_localization: ^0.1.13
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:
@@ -54,7 +61,7 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
+  generate: true
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
