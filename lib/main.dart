@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sizer/sizer.dart';
 import 'package:untitled1/cubit/counter_cubit/cubit.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:untitled1/utils/color_schemes.g.dart';
@@ -31,24 +32,30 @@ class MyApp extends StatelessWidget {
             builder: (__, box, _) {
               bool darkMode = box.get(darkModeValue, defaultValue: false);
               String language = box.get(languageValue, defaultValue: "en");
-              return MaterialApp.router(
-                title: nasaNews,
-                themeMode: darkMode?ThemeMode.dark:ThemeMode.light,
-                locale: Locale(language),
-                supportedLocales: AppLocalizations.supportedLocales,
-                localizationsDelegates:AppLocalizations.localizationsDelegates,
-                theme: ThemeData(
-                  colorScheme: lightColorScheme,
-                  textTheme: textTheme,
-                  useMaterial3: true
-                ),
-                darkTheme: ThemeData(
-                    textTheme: textTheme,
-                  useMaterial3: true,
-                  colorScheme: darkColorScheme
-                ),
-                routerConfig: appRouter.router,
-              );
+              return
+              Sizer(
+              builder: (context, orientation, deviceType)
+              {
+                return MaterialApp.router(
+                  title: nasaNews,
+                  themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
+                  locale: Locale(language),
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  localizationsDelegates: AppLocalizations
+                      .localizationsDelegates,
+                  theme: ThemeData(
+                      colorScheme: lightColorScheme,
+                      textTheme: textTheme,
+                      useMaterial3: true
+                  ),
+                  darkTheme: ThemeData(
+                      textTheme: textTheme,
+                      useMaterial3: true,
+                      colorScheme: darkColorScheme
+                  ),
+                  routerConfig: appRouter.router,
+                );
+              });
             }));
   }
 }

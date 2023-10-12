@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:sizer/sizer.dart';
 import 'package:untitled1/cubit/counter_cubit/cubit.dart';
 import 'package:untitled1/cubit/counter_cubit/state.dart';
+import 'package:untitled1/presentation/widgets/home_drawer.dart';
 import 'package:untitled1/utils/constant.dart';
 import 'package:untitled1/utils/constant_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -15,6 +17,8 @@ class CounterCubitPage extends StatelessWidget {
     final settings=AppLocalizations.of(context)!;
     Box box=Hive.box(settingsBox);
     return Scaffold(
+      appBar: AppBar(title: Text(settings.home),),
+        drawer:const HomeDrawer(),
         body: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -34,7 +38,7 @@ class CounterCubitPage extends StatelessWidget {
               child: const Icon(Icons.add),
             ),
             SizedBox(
-              width: 5,
+              width: 5.w,
             ),
             FloatingActionButton(
               onPressed: () {
@@ -50,7 +54,7 @@ class CounterCubitPage extends StatelessWidget {
             },
             child: Text(settings.news)),
         SizedBox(
-          height: 5,
+          height: 5.w,
         ),
         Switch(
             value: box.get(darkModeValue),
@@ -59,7 +63,7 @@ class CounterCubitPage extends StatelessWidget {
             }),
 
         SizedBox(
-          height: 5,
+          height: 5.w,
         ),
         DropdownButton<String>(
             value: box.get(languageValue),

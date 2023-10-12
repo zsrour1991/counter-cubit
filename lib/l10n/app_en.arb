@@ -1,6 +1,10 @@
 {
     "helloWorld": "Hello World!",
       "news": "news",
+      "home":"Home Page",
+      "app_title":"Nasa",
+      "language":"language",
+      "theme":"theme",
     "@helloWorld": {
       "description": "The conventional newborn programmer greeting"
     }
