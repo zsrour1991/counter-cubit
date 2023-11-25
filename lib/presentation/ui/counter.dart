@@ -1,79 +1,71 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:sizer/sizer.dart';
-import 'package:untitled1/cubit/counter_cubit/cubit.dart';
-import 'package:untitled1/cubit/counter_cubit/state.dart';
-import 'package:untitled1/presentation/widgets/home_drawer.dart';
-import 'package:untitled1/utils/constant.dart';
-import 'package:untitled1/utils/constant_route.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:intl/intl.dart';
+import 'package:untitled1/bloc/mars_photos_cubit.dart';
 
-class CounterCubitPage extends StatelessWidget {
+import '../widgets/home_drawer.dart';
+import '../widgets/mars_photo_card.dart';
+
+class Home extends StatelessWidget {
+  const Home({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final cubit = BlocProvider.of<CounterCubitCubit>(context);
-    final settings=AppLocalizations.of(context)!;
-    Box box=Hive.box(settingsBox);
-    return Scaffold(
-      appBar: AppBar(title: Text(settings.home),),
-        drawer:const HomeDrawer(),
-        body: Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        BlocBuilder<CounterCubitCubit, CounterCubitState>(
+    final strings = AppLocalizations.of(context)!;
+    return BlocProvider(
+      create: (context) => MarsPhotosCubit(),
+      child: Scaffold(
+        appBar: AppBar(title: Text(strings.app_title)),
+        body: BlocBuilder<MarsPhotosCubit, MarsPhotosState>(
           builder: (context, state) {
-            return Text(cubit.counter.toString());
+            final MarsPhotosCubit cubit = context.read<MarsPhotosCubit>();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ListTile(
+                  title: const Text("Select Date"),
+                  trailing: const Icon(Icons.calendar_month),
+                  onTap: () async {
+                    final selectedDate = await showDatePicker(
+                      context: context,
+                      initialDate: cubit.selectedDate ??
+                          DateTime.now().subtract(
+                            const Duration(days: 30),
+                          ),
+                      firstDate: DateTime(2018),
+                      lastDate: DateTime.now(),
+                    );
+                    cubit.changeSelectedDate(selectedDate);
+                  },
+                  subtitle: cubit.selectedDate != null
+                      ? Text(DateFormat.yMMMd().format(cubit.selectedDate!))
+                      : null,
+                ),
+                state is MarsPhotosLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : cubit.marsPhotos.isNotEmpty
+                    ? Expanded(
+                  child: ListView.builder(
+                    itemCount: cubit.marsPhotos.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return PhotoCard(
+                          photo: cubit.marsPhotos[index]);
+                    },
+                  ),
+                )
+                    : const Expanded(
+                  child: Center(
+                    child: Text("There is no photos"),
+                  ),
+                ),
+              ],
+            );
           },
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            FloatingActionButton(
-              onPressed: () {
-                cubit.increase();
-              },
-              child: const Icon(Icons.add),
-            ),
-            SizedBox(
-              width: 5.w,
-            ),
-            FloatingActionButton(
-              onPressed: () {
-                cubit.decrease();
-              },
-              child: const Icon(Icons.remove),
-            ),
-          ],
-        ),
-        FloatingActionButton(
-            onPressed: () {
-              context.push(news, extra: "zaynab srour");
-            },
-            child: Text(settings.news)),
-        SizedBox(
-          height: 5.w,
-        ),
-        Switch(
-            value: box.get(darkModeValue),
-            onChanged: (value) {
-              box.put(darkModeValue, value);
-            }),
-
-        SizedBox(
-          height: 5.w,
-        ),
-        DropdownButton<String>(
-            value: box.get(languageValue),
-            items: <String>["en", "ar"]
-                .map(
-                  (e) => DropdownMenuItem<String>(value: e, child: Text(e)),
-            )
-                .toList(),
-            onChanged: (locale) => box.put(languageValue, locale)),
-      ],
-    ));
+        drawer: const HomeDrawer(),
+      ),
+    );
   }
 }

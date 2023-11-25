@@ -10,7 +10,7 @@ class AppRouter {
     routes: <RouteBase>[
       GoRoute(
         path: '/',
-        builder: (context, state) =>  CounterCubitPage(),
+        builder: (context, state) =>  Home(),
       ),
       GoRoute(
         path: news,
@@ -18,7 +18,7 @@ class AppRouter {
       ),
     ],
     errorBuilder: (context, state) {
-      return CounterCubitPage();
+      return Home();
     },
   );
 }
